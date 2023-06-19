@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "spanTrie.h"
+#include <locale.h>
+#include "span.c"
 
-int main()
-{
-    printf("Hello world!\n");
-
-    SpanTrieT * head = criarNo();
-    printf("no: %p\n", head);
-    char str[100];
+int main(int argc, char *argv[]) {
 
 
+    SpanTrieT * arvore = criarNoTrie();
+    char str[TAMANHO_MAX_PALAVRA];
+    arvore = carregarPalavras();
+    registraPalavra(arvore, "katra");
+    registraPalavra(arvore, "mandibula");
+    registraPalavra(arvore, "tita");
+
+    /*
     inserirNo(head, "hello");
     inserirNo(head, "hilario");
     inserirNo(head, "aaza");
@@ -31,7 +34,6 @@ int main()
     printf("no: %p\n", head);
     inserirNo(head, "aa");
     exibirPalavras(head, str, 0);
-    /*
     deletarNo(&head, "aa");
 
     printf("%d\n ", procurarPalavra(head, "aa"));
@@ -41,7 +43,18 @@ int main()
     printf(" ---------\n ");
     printf("%d\n ", procurarPalavra(head, "aa"));
     printf("%d\n ", procurarPalavra(head, "aza"));
-    printf("%d\n ", procurarPalavra(head, "hello"));
+
+
     */
+
+    exibirPalavrasTrie(arvore, str, 0);
+    printf("-----------------");
+    printf("%d\n ",procurarPalavraTrie(arvore, "bernard"));
+    
+
+
+
+    apagarArvore(arvore);
+
     return 0;
 }

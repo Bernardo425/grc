@@ -121,5 +121,6 @@ void apagarArvore(SpanTrieT * arvore){
                 arvore->caracter[i] = NULL;
             }
         }
+        free(arvore);
     }
 }
