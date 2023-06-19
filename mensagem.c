@@ -1,8 +1,39 @@
+// importação de bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "mensagem.h"
 
+//Inserir elementos em uma lista de mensagens
+//Parametros:
+//    1- O ponteiro da lista do tipo MensagemLista
+//    2- Variavel do tipo Mensagem
+//funcaoo que insere um nó no inicio da lista, retorna o nó inserido, em caso de falha, retorna NULL
+MensagemListaT * inserirMensagemLista(MensagemListaT * mensagens, MensagemT mensagem){
+
+    MensagemListaT * no = NULL;
+    no = (MensagemListaT*) malloc(sizeof(MensagemListaT)); // aloca memoria para um MensagemLista
+    if(no == NULL) return no; //se o no for nulo, retorna NULL
+
+
+    no->mensagem = mensagem; // no membro mensagem do n�, � atribuido o valor da mensagem
+    no->prox = (!mensagens)? NULL:mensagens; //caso seja o primeiro n� da lista, ao valor do prox � atribuido NULL, caso n�o, � atribuido o valor no primeiro n� da lista
+
+    return no;
+}
+
+//Deletar Lista de mensagens
+//Parametros:
+//    1- O ponteiro da lista do tipo MensagemLista
+//fun��o recursiva que apaga todos os n�s de uma lista de mensagens
+void deletarLista(MensagemListaT * mensagens){
+    if(mensagens){
+        MensagemListaT * aux = mensagens->prox;
+        free(mensagens);
+        deletarLista(aux);
+    }
+
+}
 
 //Registrar mensagem
 //Parametros:
@@ -19,21 +50,22 @@
 MensagemListaT * registrarMensagem(MensagemListaT * mensagens, int emissor, int receptor, char *texto, char *data, int span){
 
     FILE * file;
-    MensagemT *mensagem = (MensagemT*) malloc(sizeof(MensagemT));
+    MensagemT mensagem;
 
-    strcpy(mensagem->texto, texto);
-    strcpy(mensagem->data, data);
-    mensagem->emissor = emissor;
-    mensagem->receptor = receptor;
-    mensagem->span = span;
 
-    file = fopen("mensagens.dat", "a+b");
+    strcpy(mensagem.texto, texto);
+    strcpy(mensagem.data, data);
+    mensagem.emissor = emissor;
+    mensagem.receptor = receptor;
+    mensagem.span = span;
+
+    file = fopen("./dados/mensagens.dat", "a+b");
     if(!file) return NULL;
 
-    fwrite(mensagem, sizeof(MensagemT), 1, file); // escreve a mensagem em um ficheiro
+    fwrite(&mensagem, sizeof(MensagemT), 1, file); // escreve a mensagem em um ficheiro
     fclose(file);
 
-    return inserirMensagem(mensagens, *mensagem);
+    return inserirMensagemLista(mensagens, mensagem);
 }
 
 
@@ -47,12 +79,12 @@ MensagemListaT * registrarMensagem(MensagemListaT * mensagens, int emissor, int 
 // Retorna um ponteiro de uma lista de mensagens
 // Retorna NULL quando n�o foi possivel ler/escrever em um ficheiro ou ocorrer falha na inser��o na lista
 
-MensagemListaT * listarMensagensEmissor(int tipo, int entidade, int span){
+MensagemListaT * listarMensagens(int tipo, int entidade, int span){
     FILE * file;
     MensagemListaT * mensagens;
     MensagemT *mensagem = (MensagemT*) malloc(sizeof(MensagemT));
 
-    file = fopen("mensagens.dat", "rb");
+    file = fopen("./dados/mensagens.dat", "rb");
 
     if(file == NULL) return NULL;
 
@@ -62,11 +94,11 @@ MensagemListaT * listarMensagensEmissor(int tipo, int entidade, int span){
         if(feof(file)) break;
         if(tipo == 1)
             if((mensagem->emissor == entidade) && (mensagem->span == span))
-                mensagens = inserirMensagem(mensagens, *mensagem);
+                mensagens = inserirMensagemLista(mensagens, *mensagem);
 
         if(tipo == 2)
             if((mensagem->receptor == entidade) && (mensagem->span == span))
-                mensagens = inserirMensagem(mensagens, *mensagem);
+                mensagens = inserirMensagemLista(mensagens, *mensagem);
 
     }
 
