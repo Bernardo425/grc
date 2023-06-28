@@ -1,5 +1,6 @@
 /bin
 /obj
+/dados/*.*
 projecto_final.cbp
 projecto_final.depend
 projecto_final.layout
