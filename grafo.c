@@ -15,7 +15,7 @@ typedef struct grafoT{
 // função responsável por inicializar uma matrix de adjacencia
 // retorna uma matrix
 int ** matrixInit(int linha, int coluna){
-    int ** mtx = (int *) malloc(linha * sizeof(int *)); // aloca memoria para m linhas do tipo * int
+    int ** mtx = (int **) malloc(linha * sizeof(int *)); // aloca memoria para m linhas do tipo * int
     if(mtx == NULL) return NULL;
 
     for(int i = 0; i < linha; ++i){
@@ -40,6 +40,7 @@ GrafoT * inicializarGrafo(int v){
     g->v = v;
     g->a = 0; // inicialmente no grafo existem 0 arestas
     g->adj = matrixInit(v, v);
+    return g;
 }
 
 
